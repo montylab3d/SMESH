@@ -1,0 +1,16 @@
+[submodule "geom"]
+	path = geom
+	url = git@github.com:montylab3d/smesh-geom.git
+	branch = packaging
+[submodule "kernel"]
+	path = kernel
+	url = git@github.com:montylab3d/smesh-kernel.git
+	branch = packaging
+[submodule "netgenplugin"]
+	path = netgenplugin
+	url = git@github.com:montylab3d/smesh-netgenplugin.git
+	branch = packaging
+[submodule "smesh"]
+	path = smesh
+	url = git@github.com:montylab3d/smesh-smesh.git
+	branch = packaging
