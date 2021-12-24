@@ -29,14 +29,14 @@ set(BUILD_SHARED_LIBS TRUE)
 # Force C++ 17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+# Do *not* force extensions on or off-- this will cause ABI problems with gnu++17
 
 # Warning and errors
 if(MSVC)
     add_compile_options(/W1)
     add_compile_options(/wd4715 /wd4091 /wd4503 /wd4805 /wd4267 /wd4477 /wd4138 /wd4273 /wd4311 /wd4806)
 else()
-    add_compile_options(-Wno-deprecated)
+    add_compile_options(-Wno-deprecated -Wno-sign-compare -Wno-unused-variable -Wno-unused-but-set-variable)
 endif()
 
 # Definitions
@@ -60,6 +60,7 @@ if(CMAKE_SIZEOF_VOID_P STREQUAL 8)
     # add_definitions(-DSALOME_USE_64BIT_IDS)
 endif(CMAKE_SIZEOF_VOID_P STREQUAL 8)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # --------------------------------------------------------------------------- #
 # OpenCASCADE
@@ -69,7 +70,6 @@ find_package(OpenCASCADE REQUIRED)
 
 include_directories(${OpenCASCADE_INCLUDE_DIR})
 link_directories(${OpenCASCADE_LIBRARY_DIR})
-
 
 # --------------------------------------------------------------------------- #
 # VTK
@@ -141,7 +141,6 @@ link_directories(${NETGEN_LIBRARY_DIR})
 # --------------------------------------------------------------------------- #
 # SMESH
 # --------------------------------------------------------------------------- #
-set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Kernel
 set(Kernel_SRC_DIR ${CMAKE_SOURCE_DIR}/kernel/src)

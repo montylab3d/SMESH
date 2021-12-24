@@ -1,10 +1,10 @@
 Name:           smesh
-Version:        {{{git_last_tag}}}.bleed^{{{git_last_tag_commits}}}.{{{git_head_short}}}
-Release:        1%{?dist}
+Version:        9.7.0.1
+Release:        0%{?dist}
 Summary:        OpenCascade based MESH framework
 
 License:        LGPLv2
-URL:            https://github.com/montylab3d/smesh
+URL:            https://github.com/trelau/SMESH
 
 # Upstream uses git submodules
 # git clone https://github.com/trelau/SMESH.git
@@ -14,11 +14,9 @@ URL:            https://github.com/montylab3d/smesh
 # python prepare.py
 # tar --transform='s,^src,smesh-<VERSION>/src,' -rf smesh-<VERSION>.tar src/*
 # gzip smesh-<VERSION>.tar
-Source0:        {{{ git_pack path=$GIT_ROOT dir_name=smesh source_name=smesh.tgz }}}
-Source1:        {{{ git_pack path=$GIT_ROOT/geom dir_name=smesh/geom source_name=geom.tgz }}}
-Source2:        {{{ git_pack path=$GIT_ROOT/kernel dir_name=smesh/kernel source_name=kernel.tgz }}}
-Source3:        {{{ git_pack path=$GIT_ROOT/netgenplugin dir_name=smesh/netgenplugin source_name=netgenplugin.tgz }}}
-Source4:        {{{ git_pack path=$GIT_ROOT/smesh dir_name=smesh/smesh source_name=smeshsmesh.tgz }}}
+Source0:        https://github.com/trelau/SMESH/archive/v%{version}/%{name}-%{version}.tar.gz
+Patch1:         smesh-cmake2.patch
+
 
 BuildRequires:  cmake gcc-c++ make
 BuildRequires:  doxygen graphviz
@@ -28,7 +26,7 @@ BuildRequires:  opencascade-devel
 BuildRequires:  libXmu-devel
 BuildRequires:  vtk-devel
 
-# Dependencies for [no-longer-optional] NETGENPlugin library.
+# Dependencies for optional NETGENPlugin library.
 BuildRequires:  netgen-mesher-devel
 BuildRequires:  netgen-mesher-devel-private
 
@@ -49,13 +47,17 @@ Development files and headers for %{name}.
 
 
 %prep
-{{{ git_setup_macro dir_name=smesh source_indices=0,1,2,3,4 }}}
+%autosetup -p1
+
 
 %build
 LDFLAGS='-Wl,--as-needed'; export LDFLAGS
-%cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-       -DBUILD_TESTS=TRUE \
-       ..
+%cmake -DCMAKE_CXX_STANDARD=17 \
+       -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+       -DENABLE_NETGEN=ON \
+       -DNEW_NETGEN_INTERFACE=ON \
+       -DENABLE_MED=OFF \
+       -DBUILD_TESTS=TRUE
 
 %cmake_build
 
@@ -63,10 +65,13 @@ LDFLAGS='-Wl,--as-needed'; export LDFLAGS
 %install
 %cmake_install
 
+
 %check
 %ctest
 
+
 %ldconfig_scriptlets
+
 
 %files
 %license LICENSE.txt
@@ -75,6 +80,7 @@ LDFLAGS='-Wl,--as-needed'; export LDFLAGS
 
 %files devel
 %{_includedir}/smesh/
+#{_libdir}/*.so
 %{_libdir}/cmake/SMESH/*.cmake
 
 
