@@ -79,6 +79,9 @@ LDFLAGS='-Wl,--as-needed'; export LDFLAGS
 
 
 %changelog
+* Thu Feb 17 2022 Monty <xiphmont@gmail.com> - 9.8.0.1-0
+- Update to 9.8.0+
+
 * Mon Nov 22 2021 Monty <xiphmont@gmail.com> - 9.7.0.1-0
 - Update to 9.7.0.1.
 - place cmake configuration in correct location (eg, /usr/lib64/cmake/SMESH, not
